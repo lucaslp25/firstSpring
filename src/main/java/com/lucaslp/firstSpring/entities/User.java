@@ -3,10 +3,21 @@ package com.lucaslp.firstSpring.entities;
 import java.io.Serializable;
 import java.util.Objects;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table; 
+// a partir do Spring Boot 3 Começou a se usar o Jakarta, e não mais o  javax.persistence!
+
+@Entity
+@Table(name = "tb_user")
 public class User implements Serializable{
 	
 	private static final long serialVersionUID = 1L;	//Comum para trafegar entre redes o serializable! 
 	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) //autoincremento do id no banco de dados
 	private Long id;
 	private String name;
 	private String email;
