@@ -1,12 +1,17 @@
 package com.lucaslp.firstSpring.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table; 
 // a partir do Spring Boot 3 Começou a se usar o Jakarta, e não mais o  javax.persistence!
 
@@ -23,6 +28,12 @@ public class User implements Serializable{
 	private String email;
 	private String fone;
 	private String password;
+	
+	//quando temos duas associações e a gente mapeia elas pelo JPA no nosso programa, nós temos que colocar uma notação de JsonIgnore em um dos lados dessa associação para não entrar em um loop infinito o programa quando for chamar a requisição! nesse caso optei por colocar aqui no cliente, pois a chave estrangeira fica na parte da Order, aqui a associação fica mais opcional, então fica mais criterio meu colocar essa notação nessa classe!
+	
+	@JsonIgnore 
+	@OneToMany(mappedBy = "client")
+	private List<Order> orders = new ArrayList<>();
 	
 	public User() {} //No uso de Framework é obrigatorio o uso de construtores vazios!
 
@@ -75,6 +86,10 @@ public class User implements Serializable{
 		this.password = password;
 	}
 	
+	public List<Order> getOrders() {
+		return orders;
+	}
+	
 	//hashcode apenas do ID nesse caso aqui do projeto!
 
 	@Override
@@ -93,4 +108,8 @@ public class User implements Serializable{
 		User other = (User) obj;
 		return Objects.equals(id, other.id);
 	}
+
+
+
+	
 }
