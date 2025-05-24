@@ -13,6 +13,8 @@ import com.lucaslp.firstSpring.repositories.UserRepository;
 import com.lucaslp.firstSpring.services.exceptions.DataBaseException;
 import com.lucaslp.firstSpring.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service  // definindo como um serviço (registrando como um componente)
 public class UserService {
 	
@@ -38,14 +40,18 @@ public class UserService {
 		}catch(EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
 		}catch(DataIntegrityViolationException e) {
-			throw new DataBaseException(e.getMessage()); //exceção da camda de serviço
+			throw new DataBaseException(e.getMessage()); //exceção da camada de serviço
 		}
 	} 
 	
 	public User update (Long id, User obj) {
+		try {
 		User entity = repository.getReferenceById(id);
 		updateData(entity, obj);
 		return repository.save(entity);
+		}catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(User entity, User obj) {
